@@ -10,7 +10,7 @@
     "lovelace",
     "custom-cards",
     "map",
-    "visualization",
+    "visualization"
   ],
   "module": "temperature-map-card.js",
   "repository": "https://github.com/dkt01/HASS-Temperature-Map-Card",
