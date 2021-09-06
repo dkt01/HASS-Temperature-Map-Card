@@ -23,13 +23,11 @@ import {
   PropertyValues,
   CSSResultGroup,
 } from 'lit';
+import {ifDefined} from 'lit-html/directives/if-defined';
 import { customElement, property, state } from "lit/decorators";
 import {
   HomeAssistant,
   hasConfigOrEntityChanged,
-  hasAction,
-  ActionHandlerEvent,
-  handleAction,
   LovelaceCardEditor,
   getLovelace,
 } from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types
@@ -113,21 +111,13 @@ export class TemperatureMapCard extends LitElement {
     return html`
       <ha-card
         .header=${this.config.name}
-        @action=${this._handleAction}
-        .actionHandler=${actionHandler({
-          hasHold: hasAction(this.config.hold_action),
-          hasDoubleClick: hasAction(this.config.double_tap_action),
-        })}
+        .actionHandler=${actionHandler()}
         tabindex="0"
-        .label=${`Temperature: ${this.config.entity || 'No Entity Defined'}`}
-      ></ha-card>
+        .label=${`Temperature`}
+      >
+      <img src="${ifDefined(this.config.image)}"/>
+      </ha-card>
     `;
-  }
-
-  private _handleAction(ev: ActionHandlerEvent): void {
-    if (this.hass && this.config && ev.detail.action) {
-      handleAction(this, this.hass, this.config, ev.detail.action);
-    }
   }
 
   private _showWarning(warning: string): TemplateResult {
@@ -151,6 +141,11 @@ export class TemperatureMapCard extends LitElement {
 
   // https://lit-element.polymer-project.org/guide/styles
   static get styles(): CSSResultGroup {
-    return css``;
+    return css`
+      img {
+        display: block;
+        width: 100%;
+      }
+    `;
   }
 }
